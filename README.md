@@ -1,7 +1,7 @@
 # vpinos-repo
 
 Signed apt repository for VPINOS packages (`vpinball`, `vpinfe`, `vpxconfig`). Packages are
-built in [`superhac/vpinos-deb-repo`](https://github.com/superhac/vpinos-deb-repo);
+built in [`vpinos/deb-repo`](https://github.com/vpinos/deb-repo);
 this repo publishes them as a flat apt repository hosted on a single, fixed
 GitHub Release (tag `apt`).
 
@@ -75,7 +75,7 @@ the committed `keys/vpinos.asc`.
 
 ## Maintainer: publish an update
 
-Run after a new build finishes in `vpinos-deb-repo`. Go to **Actions > Update
+Run after a new build finishes in `vpinos/deb-repo`. Go to **Actions > Update
 apt repository > Run workflow**, or:
 
 ```bash

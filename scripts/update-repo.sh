@@ -9,7 +9,7 @@
 #      DRY_RUN=1 (build locally in .work/, upload nothing)
 set -euo pipefail
 
-source_repo="${SOURCE_REPO:-superhac/vpinos-deb-repo}"
+source_repo="${SOURCE_REPO:-vpinos/deb-repo}"
 repo="${REPO:-superhac/vpinos-repo}"
 repo_tag="${REPO_TAG:-apt}"
 source_tag="${1:-}"
