@@ -1,7 +1,7 @@
 # vpinos-repo
 
 Signed apt repository for VPINOS packages (`vpinball`, `vpinfe`, `vpxconfig`). Packages are
-built in [`vpinos/deb-repo`](https://github.com/vpinos/deb-repo);
+built in [`vpinos/deb-package-builder`](https://github.com/vpinos/deb-package-builder);
 this repo publishes them as a flat apt repository hosted on a single, fixed
 GitHub Release (tag `apt`).
 
@@ -16,8 +16,8 @@ so use Ubuntu 24.04 / Debian 13 or newer.
    ```bash
    sudo install -d -m 0755 /etc/apt/keyrings
    sudo curl -fsSL -o /etc/apt/keyrings/vpinos.asc \
-     https://github.com/superhac/vpinos-repo/releases/download/apt/vpinos.asc
-   echo "deb [signed-by=/etc/apt/keyrings/vpinos.asc] https://github.com/superhac/vpinos-repo/releases/download/apt ./" \
+     https://github.com/vpinos/deb-repo/releases/download/apt/vpinos.asc
+   echo "deb [signed-by=/etc/apt/keyrings/vpinos.asc] https://github.com/vpinos/deb-repo/releases/download/apt ./" \
      | sudo tee /etc/apt/sources.list.d/vpinos.list
    ```
 
@@ -56,7 +56,7 @@ line), so there is no `dists/` or `pool/` tree. Do not download assets by hand.
 
 ```bash
 # 1. Create the GitHub repo and push this project
-gh repo create superhac/vpinos-repo --public --source=. --push
+gh repo create vpinos/deb-repo --public --source=. --push
 
 # 2. Create the signing key (prompts for a passphrase) and export the public key
 scripts/generate-key.sh
@@ -64,8 +64,8 @@ git add keys/vpinos.asc && git commit -m "add public signing key" && git push
 
 # 3. Store the private key (and passphrase, if you set one) as Actions secrets
 gpg --armor --export-secret-keys <fingerprint> \
-  | gh secret set VPINOS_GPG_PRIVATE_KEY -R superhac/vpinos-repo
-gh secret set VPINOS_GPG_PASSPHRASE -R superhac/vpinos-repo
+  | gh secret set VPINOS_GPG_PRIVATE_KEY -R vpinos/deb-repo
+gh secret set VPINOS_GPG_PASSPHRASE -R vpinos/deb-repo
 ```
 
 Secrets are encrypted by GitHub and are never shown again after being set. Also
@@ -75,13 +75,13 @@ the committed `keys/vpinos.asc`.
 
 ## Maintainer: publish an update
 
-Run after a new build finishes in `vpinos/deb-repo`. Go to **Actions > Update
+Run after a new build finishes in `vpinos/deb-package-builder`. Go to **Actions > Update
 apt repository > Run workflow**, or:
 
 ```bash
-gh workflow run update-repo.yml -R superhac/vpinos-repo                 # latest build release
-gh workflow run update-repo.yml -R superhac/vpinos-repo -f source_release_tag=vpinos-debs-42
-gh workflow run update-repo.yml -R superhac/vpinos-repo -f dry_run=true # build and sign only
+gh workflow run update-repo.yml -R vpinos/deb-repo                 # latest build release
+gh workflow run update-repo.yml -R vpinos/deb-repo -f source_release_tag=vpinos-debs-42
+gh workflow run update-repo.yml -R vpinos/deb-repo -f dry_run=true # build and sign only
 ```
 
 The workflow (which runs `scripts/update-repo.sh`):

@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       source_release_tag:
-        description: Release tag in vpinos/deb-repo to publish (blank = latest)
+        description: Release tag in vpinos/deb-package-builder to publish (blank = latest)
         required: false
         default: ""
       dry_run:
