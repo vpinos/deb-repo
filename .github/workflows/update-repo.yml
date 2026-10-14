@@ -3,8 +3,15 @@ name: Update apt repository
 on:
   workflow_dispatch:
     inputs:
+      source_repo:
+        description: Build repo to publish from
+        type: choice
+        options:
+          - vpinos/deb-package-builder
+          - vpinos/vpinos-packages
+        default: vpinos/deb-package-builder
       source_release_tag:
-        description: Release tag in vpinos/deb-package-builder to publish (blank = latest)
+        description: Release tag in the build repo to publish (blank = latest)
         required: false
         default: ""
       dry_run:
@@ -52,6 +59,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
+          SOURCE_REPO: ${{ inputs.source_repo }}
           VPINOS_GPG_PASSPHRASE: ${{ secrets.VPINOS_GPG_PASSPHRASE }}
           DRY_RUN: ${{ inputs.dry_run && '1' || '0' }}
         run: scripts/update-repo.sh "${{ inputs.source_release_tag }}"

@@ -1,15 +1,14 @@
 # vpinos-repo
 
-Signed apt repository for VPINOS packages (`vpinball`, `vpinfe`, `vpxconfig`). Packages are
+Signed apt repository for VPINOS packages (`vpinball`, `vpinfe`, `vpxconfig`, `wivrn`). Packages are
 built in [`vpinos/deb-package-builder`](https://github.com/vpinos/deb-package-builder);
 this repo publishes them as a flat apt repository hosted on a single, fixed
 GitHub Release (tag `apt`).
 
 ## Install
 
-Requirements: a 64-bit x86 (amd64) Debian or Ubuntu system, and `curl`
-(`sudo apt install curl ca-certificates`). `vpinball` is built on Ubuntu 24.04,
-so use Ubuntu 24.04 / Debian 13 or newer.
+Requirements: a 64-bit x86 or arm64 Debian system, trixie (13) or newer, and
+`curl` (`sudo apt install curl ca-certificates`).
 
 1. Add the signing key and the repository:
 
@@ -25,7 +24,7 @@ so use Ubuntu 24.04 / Debian 13 or newer.
 
    ```bash
    sudo apt update
-   sudo apt install vpinball vpinfe vpxconfig
+   sudo apt install vpinball vpinfe vpxconfig wivrn
    ```
 
 Updates arrive through the normal `sudo apt update && sudo apt upgrade`.
@@ -40,7 +39,7 @@ gpg --show-keys --fingerprint /etc/apt/keyrings/vpinos.asc
 To remove the repository:
 
 ```bash
-sudo apt remove vpinball vpinfe vpxconfig   # optional
+sudo apt remove vpinball vpinfe vpxconfig wivrn   # optional
 sudo rm /etc/apt/sources.list.d/vpinos.list /etc/apt/keyrings/vpinos.asc
 sudo apt update
 ```
@@ -75,14 +74,25 @@ the committed `keys/vpinos.asc`.
 
 ## Maintainer: publish an update
 
-Run after a new build finishes in `vpinos/deb-package-builder`. Go to **Actions > Update
-apt repository > Run workflow**, or:
+Run after a new release in one of the two build repos:
+
+| `source_repo` | Builds |
+|---|---|
+| `vpinos/deb-package-builder` (default) | Upstream software: `vpinball`, `vpinfe`, `vpxconfig`, `wivrn`, `xrizer` |
+| `vpinos/vpinos-packages` | VPinOS's own packages: `vpinos-core` (tags `core-vX.Y.Z`) |
+
+Go to **Actions > Update apt repository > Run workflow** and pick the source repo
+and tag, or:
 
 ```bash
-gh workflow run update-repo.yml -R vpinos/deb-repo                 # latest build release
+gh workflow run update-repo.yml -R vpinos/deb-repo                 # latest deb-package-builder release
 gh workflow run update-repo.yml -R vpinos/deb-repo -f source_release_tag=vpinos-debs-42
+gh workflow run update-repo.yml -R vpinos/deb-repo \
+  -f source_repo=vpinos/vpinos-packages -f source_release_tag=core-v1.1.0
 gh workflow run update-repo.yml -R vpinos/deb-repo -f dry_run=true # build and sign only
 ```
+
+Each run publishes one release of one build repo.
 
 The workflow (which runs `scripts/update-repo.sh`):
 
@@ -97,7 +107,10 @@ Packages already in the repo are kept, so a build release that only contains
 one package updates just that package. A package only upgrades for users if its
 version is higher than the previous one.
 
-The build repo must be public (or the workflow needs a token that can read it).
+Packages from the other build repo are kept, too: publishing `vpinos-core` never
+drops `vpinball`, and the reverse.
+
+Both build repos must be public (or the workflow needs a token that can read them).
 
 ### Running locally instead
 
