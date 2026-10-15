@@ -81,14 +81,34 @@ Run after a new release in one of the two build repos:
 | `vpinos/deb-package-builder` (default) | Upstream software: `vpinball`, `vpinfe`, `vpxconfig`, `wivrn`, `xrizer` |
 | `vpinos/vpinos-packages` | VPinOS's own packages: `vpinos-core` (tags `core-vX.Y.Z`); `vpinos-platform`, `vpinos-kernel` and `vpinos-nvidia-modules-<kernel>` (tags `platform-vX.Y.Z`, all five debs in one release) |
 
-Go to **Actions > Update apt repository > Run workflow** and pick the source repo
-and tag, or:
+**This workflow only publishes; it doesn't build anything.** The `.deb` files
+must already be attached to a GitHub release in the build repo. In
+`vpinos-packages`, pushing a `core-v…` or `platform-v…` tag runs its **Release
+package** workflow, which builds them. Wait for that run to go green first.
+
+In the GitHub UI:
+
+1. **Actions > Update apt repository > Run workflow**.
+2. **Build repo to publish from**: pick the repo the release is in. It
+   defaults to `vpinos/deb-package-builder`, so for VPinOS's own packages
+   change it to `vpinos/vpinos-packages` **every time**.
+3. **Release tag**: type the exact tag (for example `platform-v1.0.1` or
+   `core-v1.1.2`). Blank means "the newest release in that repo", which is
+   the wrong one as soon as a core and a platform release are mixed.
+4. Leave **dry run** off and run it.
+5. Check the run log: `SOURCE_REPO:` shows the repo you meant,
+   `Downloading <tag> release from <repo>...`, and one `<file>.deb: OK` line
+   per package.
+
+Or from the command line:
 
 ```bash
 gh workflow run update-repo.yml -R vpinos/deb-repo                 # latest deb-package-builder release
 gh workflow run update-repo.yml -R vpinos/deb-repo -f source_release_tag=vpinos-debs-42
 gh workflow run update-repo.yml -R vpinos/deb-repo \
-  -f source_repo=vpinos/vpinos-packages -f source_release_tag=core-v1.1.0
+  -f source_repo=vpinos/vpinos-packages -f source_release_tag=core-v1.1.2
+gh workflow run update-repo.yml -R vpinos/deb-repo \
+  -f source_repo=vpinos/vpinos-packages -f source_release_tag=platform-v1.0.1
 gh workflow run update-repo.yml -R vpinos/deb-repo -f dry_run=true # build and sign only
 ```
 
