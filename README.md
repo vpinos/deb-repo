@@ -79,7 +79,7 @@ Run after a new release in one of the two build repos:
 | `source_repo` | Builds |
 |---|---|
 | `vpinos/deb-package-builder` (default) | Upstream software: `vpinball`, `vpinfe`, `vpxconfig`, `wivrn`, `xrizer` |
-| `vpinos/vpinos-packages` | VPinOS's own packages: `vpinos-core` (tags `core-vX.Y.Z`) |
+| `vpinos/vpinos-packages` | VPinOS's own packages: `vpinos-core` (tags `core-vX.Y.Z`); `vpinos-platform`, `vpinos-kernel` and `vpinos-nvidia-modules-<kernel>` (tags `platform-vX.Y.Z`, all five debs in one release) |
 
 Go to **Actions > Update apt repository > Run workflow** and pick the source repo
 and tag, or:
