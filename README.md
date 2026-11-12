@@ -1,6 +1,6 @@
 # vpinos-repo
 
-Signed apt repository for VPINOS packages (`vpinball`, `vpinfe`, `vpxconfig`, `wivrn`, `vpxtool`). Packages are
+Signed apt repository for VPINOS packages (`vpinball`, `vpinfe`, `vpxconfig`, `wivrn`, `vpxtool`, `pinscape-cross`). Packages are
 built in [`vpinos/deb-package-builder`](https://github.com/vpinos/deb-package-builder);
 this repo publishes them as a flat apt repository hosted on a single, fixed
 GitHub Release (tag `apt`).
@@ -78,7 +78,7 @@ Run after a new release in one of the two build repos:
 
 | `source_repo` | Builds |
 |---|---|
-| `vpinos/deb-package-builder` (default) | Upstream software: `vpinball`, `vpinfe`, `vpxconfig`, `wivrn`, `xrizer`, `vpx-editor`, `vpxtool` |
+| `vpinos/deb-package-builder` (default) | Upstream software: `vpinball`, `vpinfe`, `vpxconfig`, `wivrn`, `xrizer`, `vpx-editor`, `vpxtool`, `pinscape-cross` |
 | `vpinos/vpinos-packages` | VPinOS's own packages: `vpinos-core` (tags `core-vX.Y.Z`); `vpinos-platform`, `vpinos-kernel` and `vpinos-nvidia-modules-<kernel>` (tags `platform-vX.Y.Z`, all five debs in one release) |
 
 **This workflow only publishes; it doesn't build anything.** The `.deb` files
