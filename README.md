@@ -1,6 +1,6 @@
 # vpinos-repo
 
-Signed apt repository for VPINOS packages (`vpinball`, `vpinfe`, `vpxconfig`, `wivrn`). Packages are
+Signed apt repository for VPINOS packages (`vpinball`, `vpinfe`, `vpxconfig`, `wivrn`, `vpxtool`). Packages are
 built in [`vpinos/deb-package-builder`](https://github.com/vpinos/deb-package-builder);
 this repo publishes them as a flat apt repository hosted on a single, fixed
 GitHub Release (tag `apt`).
@@ -24,7 +24,7 @@ Requirements: a 64-bit x86 or arm64 Debian system, trixie (13) or newer, and
 
    ```bash
    sudo apt update
-   sudo apt install vpinball vpinfe vpxconfig wivrn
+   sudo apt install vpinball vpinfe vpxconfig wivrn vpxtool
    ```
 
 Updates arrive through the normal `sudo apt update && sudo apt upgrade`.
@@ -39,7 +39,7 @@ gpg --show-keys --fingerprint /etc/apt/keyrings/vpinos.asc
 To remove the repository:
 
 ```bash
-sudo apt remove vpinball vpinfe vpxconfig wivrn   # optional
+sudo apt remove vpinball vpinfe vpxconfig wivrn vpxtool   # optional
 sudo rm /etc/apt/sources.list.d/vpinos.list /etc/apt/keyrings/vpinos.asc
 sudo apt update
 ```
@@ -78,7 +78,7 @@ Run after a new release in one of the two build repos:
 
 | `source_repo` | Builds |
 |---|---|
-| `vpinos/deb-package-builder` (default) | Upstream software: `vpinball`, `vpinfe`, `vpxconfig`, `wivrn`, `xrizer` |
+| `vpinos/deb-package-builder` (default) | Upstream software: `vpinball`, `vpinfe`, `vpxconfig`, `wivrn`, `xrizer`, `vpx-editor`, `vpxtool` |
 | `vpinos/vpinos-packages` | VPinOS's own packages: `vpinos-core` (tags `core-vX.Y.Z`); `vpinos-platform`, `vpinos-kernel` and `vpinos-nvidia-modules-<kernel>` (tags `platform-vX.Y.Z`, all five debs in one release) |
 
 **This workflow only publishes; it doesn't build anything.** The `.deb` files
