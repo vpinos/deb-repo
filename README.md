@@ -79,7 +79,7 @@ Run after a new release in one of the two build repos:
 | `source_repo` | Builds |
 |---|---|
 | `vpinos/deb-package-builder` (default) | Upstream software: `vpinball`, `vpinfe`, `vpxconfig`, `wivrn`, `xrizer`, `vpx-editor`, `vpxtool`, `pinscape-cross` |
-| `vpinos/vpinos-packages` | VPinOS's own packages: `vpinos-core` (tags `core-vX.Y.Z`); `vpinos-platform`, `vpinos-kernel` and `vpinos-nvidia-modules-<kernel>` (tags `platform-vX.Y.Z`, all five debs in one release) |
+| `vpinos/vpinos-packages` | VPinOS's own packages: `vpinos-core` (tags `core-vX.Y.Z`); `vpinos-platform`, `vpinos-kernel`, `vpinos-nvidia-modules-<kernel>`, `vpinos-nvidia-legacy` and `vpinos-nvidia-legacy-modules-<kernel>` (tags `platform-vX.Y.Z`, all seven debs in one release) |
 
 **This workflow only publishes; it doesn't build anything.** The `.deb` files
 must already be attached to a GitHub release in the build repo. In
