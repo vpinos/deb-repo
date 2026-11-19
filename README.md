@@ -1,6 +1,6 @@
 # vpinos-repo
 
-Signed apt repository for VPINOS packages (`vpinball`, `vpinfe`, `vpxconfig`, `wivrn`, `vpxtool`, `pinscape-cross`, `vpx-ssf-test-table`). Packages are
+Signed apt repository for VPINOS packages (`vpinball`, `vpinfe`, `vpxconfig`, `wivrn`, `vpxtool`, `pinscape-cross`, `vpx-ssf-test-table`, `vpx-dof-test-table`). Packages are
 built in [`vpinos/deb-package-builder`](https://github.com/vpinos/deb-package-builder);
 this repo publishes them as a flat apt repository hosted on a single, fixed
 GitHub Release (tag `apt`).
@@ -78,7 +78,7 @@ Run after a new release in one of the two build repos:
 
 | `source_repo` | Builds |
 |---|---|
-| `vpinos/deb-package-builder` (default) | Upstream software: `vpinball`, `vpinfe`, `vpxconfig`, `wivrn`, `xrizer`, `vpx-editor`, `vpxtool`, `pinscape-cross`, `vpx-ssf-test-table` |
+| `vpinos/deb-package-builder` (default) | Upstream software: `vpinball`, `vpinfe`, `vpxconfig`, `wivrn`, `xrizer`, `vpx-editor`, `vpxtool`, `pinscape-cross`, `vpx-ssf-test-table`, `vpx-dof-test-table` |
 | `vpinos/vpinos-packages` | VPinOS's own packages: `vpinos-core` (tags `core-vX.Y.Z`); `vpinos-platform`, `vpinos-kernel`, `vpinos-nvidia-modules-<kernel>`, `vpinos-nvidia-legacy` and `vpinos-nvidia-legacy-modules-<kernel>` (tags `platform-vX.Y.Z`, all seven debs in one release) |
 
 **This workflow only publishes; it doesn't build anything.** The `.deb` files
