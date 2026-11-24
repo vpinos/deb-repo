@@ -5,6 +5,10 @@
 # verifies their checksums, merges them into the current apt repo, and
 # publishes the signed metadata to the fixed "apt" release.
 #
+# REPO_TAG picks the channel: "apt" (stable, the default) or "apt-beta" (the
+# beta channel, only used by cabinets that joined a beta). Each channel is its
+# own release with its own packages, signed with the same key.
+#
 # Env: VPINOS_GPG_KEY (required), SOURCE_REPO, REPO, REPO_TAG,
 #      DRY_RUN=1 (build locally in .work/, upload nothing)
 set -euo pipefail
@@ -23,6 +27,16 @@ incoming="$work/incoming"
 out="$work/out"
 
 command -v gh >/dev/null || { echo "gh is required." >&2; exit 1; }
+
+case "$repo_tag" in
+  apt) repo_title="VPINOS apt repository" ;;
+  apt-beta)
+    repo_title="VPINOS apt repository (beta channel)"
+    # "Latest" is never a beta build: it would put stable packages here.
+    [[ -n "$source_tag" ]] || { echo "The beta channel needs an explicit source release tag." >&2; exit 1; }
+    ;;
+  *) echo "Unknown channel release: $repo_tag (expected apt or apt-beta)." >&2; exit 1 ;;
+esac
 
 rm -rf "$work"
 mkdir -p "$stage" "$incoming"
@@ -47,6 +61,18 @@ for deb in "${new_debs[@]}"; do
 done
 (cd "$incoming" && sha256sum --check ./*.sha256)
 
+# A pre-release (3.0.0~beta.4) in the stable channel would reach every
+# cabinet: those only go to the beta channel.
+if [[ "$repo_tag" == apt ]]; then
+  for deb in "${new_debs[@]}"; do
+    ver="$(dpkg-deb -f "$deb" Version)"
+    if [[ "${ver,,}" =~ ~(alpha|beta|rc|pre|dev) ]]; then
+      echo "$(basename "$deb") is a pre-release ($ver): publish it to the beta channel, not stable." >&2
+      exit 1
+    fi
+  done
+fi
+
 new_names=()
 for deb in "${new_debs[@]}"; do
   cp "$deb" "$stage/"
@@ -64,7 +90,7 @@ fi
 
 # 4. Publish: debs first, metadata last, then remove superseded debs.
 if (( ! release_exists )); then
-  gh release create "$repo_tag" -R "$repo" --title "VPINOS apt repository" \
+  gh release create "$repo_tag" -R "$repo" --title "$repo_title" \
     --notes "Signed flat apt repository. See the README for setup; do not download assets by hand."
 fi
 

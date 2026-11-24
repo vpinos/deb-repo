@@ -116,7 +116,8 @@ Each run publishes one release of one build repo.
 
 The workflow (which runs `scripts/update-repo.sh`):
 
-1. downloads the current `.deb` files from the `apt` release,
+1. downloads the current `.deb` files from the `apt` release (`apt-beta` for
+   the beta channel),
 2. downloads the `.deb` files from the build release and verifies each against
    its `.sha256` sidecar,
 3. keeps only the newest version of each package/architecture,
@@ -131,6 +132,32 @@ Packages from the other build repo are kept, too: publishing `vpinos-core` never
 drops `vpinball`, and the reverse.
 
 Both build repos must be public (or the workflow needs a token that can read them).
+
+### Beta channel
+
+A second release, `apt-beta`, is a separate flat repository for pre-release
+builds (for now, VPinFE 3.0 betas). Only cabinets that joined a beta have it
+as a source (VPinOS menu: Setup > VPinFE 3.0 Beta), next to the stable one:
+
+```
+deb [signed-by=/etc/apt/keyrings/vpinos.asc] https://github.com/vpinos/deb-repo/releases/download/apt-beta ./
+```
+
+It's signed with the same key, so a cabinet needs no new keyring. It holds only
+what was published to it; everything else still comes from `apt`.
+
+Publish a beta build with **channel** `beta`. The source tag is required (blank
+would pick the newest stable build):
+
+```bash
+gh workflow run update-repo.yml -R vpinos/deb-repo \
+  -f source_repo=vpinos/deb-package-builder \
+  -f source_release_tag=vpinfe-beta-v3.0.0-beta.4-1 -f channel=beta
+```
+
+The first beta publish creates the `apt-beta` release. The stable channel
+refuses pre-release versions (`~alpha`, `~beta`, `~rc`, `~pre`, `~dev`), so a
+beta can't reach every cabinet by picking the wrong channel.
 
 ### Running locally instead
 

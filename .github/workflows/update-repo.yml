@@ -11,9 +11,16 @@ on:
           - vpinos/vpinos-packages
         default: vpinos/deb-package-builder
       source_release_tag:
-        description: Release tag in the build repo to publish (blank = latest)
+        description: Release tag in the build repo to publish (blank = latest; required for beta)
         required: false
         default: ""
+      channel:
+        description: "stable (release apt, every cabinet) or beta (release apt-beta, cabinets that joined a beta)"
+        type: choice
+        options:
+          - stable
+          - beta
+        default: stable
       dry_run:
         description: Build and sign but do not upload
         type: boolean
@@ -60,6 +67,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
           SOURCE_REPO: ${{ inputs.source_repo }}
+          REPO_TAG: ${{ inputs.channel == 'beta' && 'apt-beta' || 'apt' }}
           VPINOS_GPG_PASSPHRASE: ${{ secrets.VPINOS_GPG_PASSPHRASE }}
           DRY_RUN: ${{ inputs.dry_run && '1' || '0' }}
         run: scripts/update-repo.sh "${{ inputs.source_release_tag }}"
